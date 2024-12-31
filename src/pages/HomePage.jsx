@@ -8,18 +8,23 @@ import NotesTableau from '../components/NotesTableau/NotesTableau';
 
 const HomePage = () => {
     const [note, setNote] = useState({ title: '', tags: [], body: '' });
+    const [searchText, setSearchText] = useState('')
 
     const handleAddNewNote = (title, tags, body) => {
         setNote({ title, tags, body });
     };
 
+    const handleSearchQuery = (searchText) => {
+        setSearchText(searchText);
+    }
+
     return (
         <Stack style={{ height: '100vh', width: '100vw', overflowX: 'hidden' }} className="g-0">
             <Row style={{ height: '7.5%', width: '100%' }} className="g-0">
-                <Navbar sendNoteForm={handleAddNewNote} />
+                <Navbar sendNoteForm={handleAddNewNote} sendSearchQuery={handleSearchQuery}/>
             </Row>
             <Row style={{ height: '92.5%', width: '100%' }} className="g-0">
-                <NotesTableau note={note} />
+                <NotesTableau note={note} searchText={searchText}/>
             </Row>
         </Stack>
     );

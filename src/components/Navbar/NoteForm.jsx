@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Form from "react-bootstrap/Form";
@@ -6,7 +6,8 @@ import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import CreatableSelect from "react-select/creatable";
 
-const NoteForm = ({ sendNoteForm, onClose }) => {
+const NoteForm = ({ sendNoteForm, receiveNoteEditForm, onClose }) => {
+
   const [title, setTitle] = useState('');
   const [titleLength, setTitleLength] = useState(0);
   
@@ -28,7 +29,7 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
   const sendNoteInformation = () => {
     sendNoteForm(title, selectedOptions.map(option => option.value), bodyText);
     onClose();
-};
+  };
 
   return (
     <Form className="br-10" style={{ height: "35vh" }}>
@@ -103,10 +104,10 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
           onMouseLeave={() => setAddButtonHovered(false)}
           onClick={(e) => {
             e.preventDefault(); // Prevent form submission
-            sendNoteInformation(); // Call the function to send note data
+            sendNoteInformation();
           }}
         >
-          Add Note
+          Save
         </Button>
         <div>
           <p className="mt-3" style={{ opacity: "50%" }}>

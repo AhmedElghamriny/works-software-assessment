@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import EditNote from '../../pages/EditNote';
 
 import Stack from 'react-bootstrap/esm/Stack';
 import Row from 'react-bootstrap/esm/Row';
@@ -8,23 +10,43 @@ import Button from 'react-bootstrap/esm/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
-const NotesTableau = ({ note }) => {
+const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
   const [notes, setNotes] = useState([]);
+  const [editNoteShown, setEditNoteShown] = useState(false);
+  
+  const handleShowEditAddNote = () => {
+    setEditNoteShown(true);
+  };
+
+  const handleCloseEditNote = () => {
+    setEditNoteShown(false);
+  };
+
+  const handleRemoveNote = (indexToRemove) => {
+    setNotes((prevNotes) => prevNotes.filter((_, index) => index !== indexToRemove));
+  }
 
   // Add the new note to the state when the component renders or note changes
-  React.useEffect(() => {
-    if (note?.title) { // Ensure the note has content before adding
+  useEffect(() => {
+    // Ensure the note has content before adding
+    if (note?.title && note?.body) {
       setNotes((prevNotes) => [...prevNotes, note]);
     }
   }, [note]);
 
-  const loadNotes = notes.map((noteItem, index) => (
+  const loadNotes = notes.filter((noteFilteredItem) => {
+    return searchText.toLowerCase() === ''
+      ? true // Return all notes if the searchText is empty
+      : noteFilteredItem.title.toLowerCase().includes(searchText.toLowerCase()) || 
+      noteFilteredItem.body.toLowerCase().includes(searchText.toLowerCase()) ||
+      (noteFilteredItem.tags && noteFilteredItem.tags.join(', ').toLowerCase().includes(searchText.toLowerCase()));
+  }).map((noteItem, index) => (
     <Col
       lg={4} // Divide the row into three equal parts
       md={6} // On medium screens, two notes per row
       sm={12} // On small screens, one note per row
       key={index}
-      className="mb-4" // Add margin to the bottom for spacing
+      className="mb-4"
     >
       <div
         style={{
@@ -34,21 +56,79 @@ const NotesTableau = ({ note }) => {
           color: 'black',
           display: 'flex',
           flexDirection: 'column',
-          padding: '2rem',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Add a subtle shadow for better aesthetics
+          gap: '10px',
+          padding: '1rem',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-          <h5>{noteItem.title}</h5>
-          <div style={{display: 'flex', gap: '10px'}}>
-            <Button style={{backgroundColor: 'black', border: 'none'}}><FontAwesomeIcon icon={faPenToSquare} /></Button>
-            <Button style={{backgroundColor: 'black', border: 'none'}} onClick={{}}><FontAwesomeIcon icon={faTrashCan} /></Button>
-          </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap', // Allow wrapping for smaller screens
+            height: '7.5%',
+            width: '100%',
+          }}
+        >
+          <h5
+            style={{
+              margin: 0, // Remove default margin to avoid spacing issues
+              overflow: 'hidden',
+              whiteSpace: 'nowrap', // Prevent wrapping of the title text
+              backgroundColor: 'red',
+            }}
+          >
+            {noteItem.title}
+          </h5>
+          <div
+            style={{
+              display: 'flex',
+              gap: '5px', // Reduced gap for smaller screens
+              flexShrink: 0, // Prevent the buttons from shrinking
+              flexWrap: 'nowrap', // Ensure buttons remain in one row
+            }}
+          >
+            <Button
+              style={{
+                backgroundColor: 'black',
+                border: 'none',
+                padding: '0.5rem', // Adjust padding for better responsiveness
+              }}
+              onClick={handleShowEditAddNote}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </Button>
+            <Button
+              style={{
+                backgroundColor: 'black',
+                border: 'none',
+                padding: '0.5rem',
+              }}
+              onClick={() => handleRemoveNote(index)}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
+            </Button>
 
+            {editNoteShown && <EditNote onClose={handleCloseEditNote} sendNoteItem={noteItem}/>}
+          </div>
         </div>
-        <p>{noteItem.body}</p>
-        <p>Tags: {noteItem.tags?.join(', ')}</p>
+        <div
+          style={{
+            whiteSpace: 'pre-wrap',
+            height: '87.5%', // Restrict height
+            overflowY: 'auto', // Add vertical scroll when content overflows
+            padding: '0.5rem',
+            border: '1px solid #ccc', // Optional: Add a border for clarity
+            borderRadius: '5px', // Optional: Add some rounding for aesthetics
+          }}
+        >
+          <p>{noteItem.body}</p>
+        </div>
+        <p style={{height: '5%'}}>Tags: {noteItem.tags?.join(', ')}</p>
       </div>
+
+      {/* {newNoteShown && <EditNote onClose={handleCloseEditNote} sendNoteForm={sendNoteForm}/>} */}
     </Col>
   ));
 
@@ -60,7 +140,7 @@ const NotesTableau = ({ note }) => {
         padding: '2rem',
       }}
     >
-      <Row> {/* g-4 adds spacing between columns and rows */}
+      <Row>
         {loadNotes}
       </Row>
     </Stack>
