@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import NoteForm from '../components/Navbar/NoteForm';
+import EditNoteForm from '../components/NotesTableau/EditNoteForm';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 
-const EditNote = ({ onClose, sendNoteForm  }) => {
+const EditNote = ({ sendNoteItemToEdit, sendNoteForm, onClose }) => {
   const [cancelButtonisHovered, setCancelButtonHovered] = useState(false);
 
   return (
@@ -71,7 +71,7 @@ const EditNote = ({ onClose, sendNoteForm  }) => {
           </Container>
         </Row>
         <Row style={{ height: '80%' }}>
-          <NoteForm sendNoteForm={sendNoteForm} onClose={onClose}/>
+          <EditNoteForm sendNoteItemToEdit={sendNoteItemToEdit} sendNoteForm ={sendNoteForm} onClose={onClose}/>
         </Row>
       </Container>
     </Container>

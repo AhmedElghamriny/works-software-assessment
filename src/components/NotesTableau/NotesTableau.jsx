@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/esm/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
-const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
+const NotesTableau = ({ note, searchText, sendNoteForm }) => {
   const [notes, setNotes] = useState([]);
   const [editNoteShown, setEditNoteShown] = useState(false);
   
@@ -26,13 +26,28 @@ const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
     setNotes((prevNotes) => prevNotes.filter((_, index) => index !== indexToRemove));
   }
 
-  // Add the new note to the state when the component renders or note changes
+  const handleUpdateNote = (sendNoteForm) => {
+    const { noteIndex, updatedForm } = sendNoteForm;
+    setNotes((prevNotes) =>
+      prevNotes.map((noteItem, index) =>
+        index === noteIndex
+          ? { ...noteItem, title: updatedForm.title, tags: updatedForm.tags, body: updatedForm.body }
+          : noteItem
+      )
+    );
+  };
+
+  
   useEffect(() => {
-    // Ensure the note has content before adding
     if (note?.title && note?.body) {
-      setNotes((prevNotes) => [...prevNotes, note]);
+      setNotes((prevNotes) => {
+        if (!prevNotes.some((n) => n.title === note.title && n.body === note.body)) {
+          return [...prevNotes, note];
+        }
+        return prevNotes;
+      });
     }
-  }, [note]);
+  }, [note]);  
 
   const loadNotes = notes.filter((noteFilteredItem) => {
     return searchText.toLowerCase() === ''
@@ -76,7 +91,6 @@ const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
               margin: 0, // Remove default margin to avoid spacing issues
               overflow: 'hidden',
               whiteSpace: 'nowrap', // Prevent wrapping of the title text
-              backgroundColor: 'red',
             }}
           >
             {noteItem.title}
@@ -110,7 +124,7 @@ const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
               <FontAwesomeIcon icon={faTrashCan} />
             </Button>
 
-            {editNoteShown && <EditNote onClose={handleCloseEditNote} sendNoteItem={noteItem}/>}
+            {editNoteShown && <EditNote sendNoteItemToEdit={{index, noteItem}} sendNoteForm={handleUpdateNote} onClose={handleCloseEditNote} />}
           </div>
         </div>
         <div
@@ -127,8 +141,6 @@ const NotesTableau = ({ note, searchText, sendEditNoteForm }) => {
         </div>
         <p style={{height: '5%'}}>Tags: {noteItem.tags?.join(', ')}</p>
       </div>
-
-      {/* {newNoteShown && <EditNote onClose={handleCloseEditNote} sendNoteForm={sendNoteForm}/>} */}
     </Col>
   ));
 

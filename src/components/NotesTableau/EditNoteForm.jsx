@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import CreatableSelect from "react-select/creatable";
 
-const NoteForm = ({ sendNoteForm, onClose }) => {
+const EditNoteForm = ({ sendNoteForm, sendNoteItemToEdit, onClose }) => {
 
   const [title, setTitle] = useState('');
   const [titleLength, setTitleLength] = useState(0);
@@ -17,6 +17,8 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
   const [bodyText, setBodyText] = useState('');
   const [bodyLength, setBodyLength] = useState(0);
 
+  const [noteIndex, setNoteIndex] = useState('');
+
   const [addButtonisHovered, setAddButtonHovered] = useState(false);
 
   const handleTagsChange = (newValue) => {
@@ -26,11 +28,28 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
     }
   };
 
-  const sendNoteInformation = () => {
+  const sendUpdatedNoteInformation = () => {
     const formattedTags = selectedOptions.map((option) => option.value);
-    sendNoteForm(title, formattedTags, bodyText);
+    const updatedForm = { title, tags: formattedTags, body: bodyText };
+    sendNoteForm({ noteIndex, updatedForm });
     onClose();
-  };  
+  };
+
+  useEffect(() => {
+    if (sendNoteItemToEdit) {
+        const { index, noteItem } = sendNoteItemToEdit;
+        setTitle(noteItem.title || '');
+        setTitleLength(noteItem.title?.length || 0);
+        setSelectedOptions(
+          noteItem.tags?.map((tag) => ({ label: tag, value: tag })) || []
+        );
+        setTagsLength(noteItem.tags?.length || 0);
+        setBodyText(noteItem.body || '');
+        setBodyLength(noteItem.body?.length || 0);
+        setNoteIndex(index);
+    }
+  }, [sendNoteItemToEdit]);
+  
 
   return (
     <Form className="br-10" style={{ height: "35vh" }}>
@@ -105,7 +124,7 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
           onMouseLeave={() => setAddButtonHovered(false)}
           onClick={(e) => {
             e.preventDefault(); // Prevent form submission
-            sendNoteInformation();
+            sendUpdatedNoteInformation();
           }}
         >
           Save
@@ -120,4 +139,4 @@ const NoteForm = ({ sendNoteForm, onClose }) => {
   );
 };
 
-export default NoteForm;
+export default EditNoteForm;
