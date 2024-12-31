@@ -1,4 +1,9 @@
 #dropdown-basic::after {
     display: none !important;
   }
-  
+
+.ftray-button-top {
+  background-color: transparent;
+  color: black;
+  border: none;
+}

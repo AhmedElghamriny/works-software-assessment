@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/esm/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
-const NotesTableau = ({ note, searchText, sendNoteForm }) => {
+const NotesTableau = ({ note, searchText }) => {
   const [notes, setNotes] = useState([]);
   const [editNoteShown, setEditNoteShown] = useState(false);
   
@@ -152,7 +152,7 @@ const NotesTableau = ({ note, searchText, sendNoteForm }) => {
         padding: '2rem',
       }}
     >
-      <Row>
+      <Row className="g-0">
         {loadNotes}
       </Row>
     </Stack>

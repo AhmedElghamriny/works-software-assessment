@@ -14,12 +14,7 @@ const SettingsDropdownButton = () => {
   return (
     <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic" 
-            style={{
-            backgroundColor: settingsButtonisHovered ? "white" : "black",
-            color: settingsButtonisHovered ? "black" : "white",
-            border: 'none',
-            transition: 'background-color 0.3s ease, color 0.3s ease'
-        }}
+            style = {{backgroundColor: settingsButtonisHovered ? 'black' : 'white', color: settingsButtonisHovered ? 'white' : 'black', transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out', border: 'none', fontSize: '1rem'}}
             onMouseEnter={() => setSettingsButtonHovered(true)}
             onMouseLeave={() => setSettingsButtonHovered(false)}
         >
@@ -27,10 +22,10 @@ const SettingsDropdownButton = () => {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Account Settings</Dropdown.Item>
             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item href="#/action-1" >Account Settings</Dropdown.Item>
+            <Dropdown.Item href="#/action-1" >Log out</Dropdown.Item>
         </Dropdown.Menu>
     </Dropdown>
   )
