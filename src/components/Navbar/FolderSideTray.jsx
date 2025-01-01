@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import FolderSideTrayTopButtons from './FolderSideTrayTopButtons'
 import FolderExplorer from './FolderExplorer'
@@ -8,6 +8,12 @@ import Row from 'react-bootstrap/esm/Row'
 import FolderSideTrayBottomButtons from './FolderSideTrayBottomButtons'
 
 const FolderSideTray = ({ visible }) => {
+    const [newFolder, setNewFolder] = useState({ name: '', files: [] });
+
+    const handleNewFolder = (newFolderName, newFolderFiles) => {
+        setNewFolder(newFolderName, newFolderFiles)
+    }
+ 
   return (
     <Container 
         style={{
@@ -18,11 +24,11 @@ const FolderSideTray = ({ visible }) => {
             top: "7.5vh",
             left: visible ? "0" : "-20vw", // Slide out of view when hidden
             transition: 'all 0.5s ease-in-out', // Smooth slide transition
-            zIndex: 1000
+            zIndex: 1000,
         }}
     >
         <Row style={{borderBottom: '1px solid gray', height: '5%'}}>
-            <FolderSideTrayTopButtons />
+            <FolderSideTrayTopButtons sendNewFolder={handleNewFolder}/>
         </Row>
         <Row style={{height: '90%'}}>
             <FolderExplorer />

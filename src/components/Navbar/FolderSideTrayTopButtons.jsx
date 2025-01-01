@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/esm/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderPlus, faFileCirclePlus, faArrowUpShortWide, faCompress } from '@fortawesome/free-solid-svg-icons';
 
-const FolderSideTrayTopButtons = () => {
+const FolderSideTrayTopButtons = ({sendNewFolder}) => {
     const [newFilebuttonHovered, setNewFileButtonHovered] = useState(false);
     const [newFolderbuttonHovered, setNewFolderButtonHovered] = useState(false);
     const [sortButtonHovered, setSortButtonHovered] = useState(false);
@@ -23,7 +23,7 @@ const FolderSideTrayTopButtons = () => {
         <Button className='ftray-button-top'
             onMouseEnter={() => setNewFolderButtonHovered(true)}
             onMouseLeave={() => setNewFolderButtonHovered(false)}
-
+            onClick={() => {sendNewFolder()}}
             style ={{backgroundColor: newFolderbuttonHovered ? 'black' : 'white', color: newFolderbuttonHovered ? 'white' : 'black', transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out'}}
         >
             <FontAwesomeIcon icon={faFolderPlus} />
