@@ -20,7 +20,12 @@ const HomePage = () => {
     }
 
     return (
-        <Stack style={{ height: '100vh', width: '100vw', overflowX: 'hidden' }} className="g-0">
+        <Stack 
+            style={{ height: '100vh', width: '100vw', overflowX: 'hidden' }}
+            className="g-0"
+            onContextMenu={(e) => {
+                e.preventDefault(); // prevent the default behaviour when right clicked
+            }}>
             <Row style={{ height: '7.5%', width: '100%' }} className="g-0">
                 <Navbar sendNoteForm={handleAddNewNote} sendSearchQuery={handleSearchQuery}/>
             </Row>

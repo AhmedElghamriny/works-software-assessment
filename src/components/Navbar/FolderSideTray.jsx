@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import FolderSideTrayTopButtons from './FolderSideTrayTopButtons'
 import FolderExplorer from './FolderExplorer'
@@ -8,11 +8,18 @@ import Row from 'react-bootstrap/esm/Row'
 import FolderSideTrayBottomButtons from './FolderSideTrayBottomButtons'
 
 const FolderSideTray = ({ visible }) => {
-    const [newFolder, setNewFolder] = useState({ name: '', files: [] });
+    const [newFolder, setNewFolder] = useState(false);
 
-    const handleNewFolder = (newFolderName, newFolderFiles) => {
-        setNewFolder(newFolderName, newFolderFiles)
+    const handleNewFolder = () => {
+        setNewFolder(true);
     }
+    
+    const handleNewFolderAdded = (successfullyAdded) => {
+    if (successfullyAdded) {
+        setNewFolder(false);
+    }
+};
+
  
   return (
     <Container 
@@ -27,15 +34,15 @@ const FolderSideTray = ({ visible }) => {
             zIndex: 1000,
         }}
     >
-        <Row style={{borderBottom: '1px solid gray', height: '5%'}}>
-            <FolderSideTrayTopButtons sendNewFolder={handleNewFolder}/>
+        <Row style={{borderBottom: '1px solid gray', height: '5%'}} className='g-0'>
+            <FolderSideTrayTopButtons addNewFolder={handleNewFolder}/>
         </Row>
-        <Row style={{height: '90%'}}>
-            <FolderExplorer />
+        <Row style={{height: '90%', overflowY: 'auto', overflowX: 'hidden'}} className='g-0'>
+            <FolderExplorer newFolderBoolean={newFolder} isNewFolderAdded={handleNewFolderAdded}/>
         </Row>
 
-        <Row style={{borderTop: '1px solid gray', height: '5%'}}>
-            <FolderSideTrayBottomButtons />
+        <Row style={{borderTop: '1px solid gray', height: '5%'}} className='g-0'>
+            <FolderSideTrayBottomButtons/>
         </Row>
     </Container>
   )
