@@ -37,14 +37,15 @@ const FolderButton = ({ index, folder, hoveredStates, foldersSelected, isEditing
   </Button>
 );
 
-const FolderExplorer = ({newFolderBoolean, isNewFolderAdded}) => {
+const FolderExplorer = ({newFolderBoolean, searchQuery,isNewFolderAdded, sortFoldersClicked}) => {
     const [folders, setFolders] = useState([]);
     const [hoveredStates, setHoveredStates] = useState(folders.map(() => false));
     const [foldersSelected, setFoldersSelected] = useState(folders.map(() => false));
     const [editingStates, setEditingStates] = useState(folders.map(() => false));
     const newFolderRef = useRef(newFolderBoolean);
+    const [queryText, setQueryText] = useState('')
+    const [sortDirection, setSortDirection] = useState('asc');
 
-    console.log(folders)
 
     const handleHoverOverEnter = (index) => {
       setHoveredStates((prevStates) => {
@@ -119,7 +120,35 @@ const FolderExplorer = ({newFolderBoolean, isNewFolderAdded}) => {
         }
     }, [newFolderBoolean]);
 
-    const loadFolders = folders.map((folder, index) => (
+    
+    useEffect(() => {
+      setQueryText(searchQuery);
+    }, [searchQuery]);
+
+    useEffect(() => {
+      console.log(queryText); 
+    }, [queryText]);
+
+    useEffect(() => {
+        setFolders((prevFolders) => {
+          const sortedFolders = [...prevFolders].sort((a, b) =>
+            sortDirection === 'asc'
+              ? a.name.localeCompare(b.name)
+              : b.name.localeCompare(a.name)
+          );
+          return sortedFolders;
+        });
+        setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+    }, [sortFoldersClicked]);
+    
+    
+    
+    
+
+    const loadFolders = folders.filter((folder, index) => {
+      return searchQuery.toLowerCase() === '' ? true // Return all notes if the searchText is empty
+      : folder.name.toLowerCase().includes(searchQuery.toLowerCase()); 
+    }).map((folder, index) => (
       <FolderButton 
         key={index}
         index={index}

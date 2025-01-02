@@ -10,7 +10,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const SearchBarWithIcon = ({sendSearchQuery}) => {
 
     return (
-        <InputGroup style={{ width: '50%' }}>
+        <InputGroup style={{ width: '100%' }}>
             <Form.Control
                 placeholder="Search notes..."
                 aria-label="Search"

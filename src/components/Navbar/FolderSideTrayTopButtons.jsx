@@ -5,11 +5,14 @@ import Button from 'react-bootstrap/esm/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderPlus, faFileCirclePlus, faArrowUpShortWide, faCompress } from '@fortawesome/free-solid-svg-icons';
 
-const FolderSideTrayTopButtons = ({addNewFolder}) => {
+const FolderSideTrayTopButtons = ({addNewFolder, sortFolders}) => {
     const [newFilebuttonHovered, setNewFileButtonHovered] = useState(false);
     const [newFolderbuttonHovered, setNewFolderButtonHovered] = useState(false);
     const [sortButtonHovered, setSortButtonHovered] = useState(false);
     const [collapseButtonHovered, setCollapseButtonHovered] = useState(false);
+
+    const [sortClicked, setSortClicked] = useState(false);
+
   return (
     <div style={{display: 'flex', justifyContent: 'space-evenly', alignContent: 'center', padding: '0.5rem', }}>
         <Button className='ftray-button-top'
@@ -31,15 +34,17 @@ const FolderSideTrayTopButtons = ({addNewFolder}) => {
         <Button className='ftray-button-top'
             onMouseEnter={() => setSortButtonHovered(true)}
             onMouseLeave={() => setSortButtonHovered(false)}
-
+            onClick={() => {
+                setSortClicked(!sortClicked);
+                sortFolders(sortClicked);
+            }}
             style ={{backgroundColor: sortButtonHovered ? 'black' : 'white', color: sortButtonHovered ? 'white' : 'black', transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out'}}
         >
-            <FontAwesomeIcon icon={faArrowUpShortWide} />\
+            <FontAwesomeIcon icon={faArrowUpShortWide} />
         </Button>
         <Button className='ftray-button-top'
             onMouseEnter={() => setCollapseButtonHovered(true)}
             onMouseLeave={() => setCollapseButtonHovered(false)}
-
             style ={{backgroundColor: collapseButtonHovered ? 'black' : 'white', color: collapseButtonHovered ? 'white' : 'black', transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out'}}
         >
             <FontAwesomeIcon icon={faCompress} />
